@@ -234,5 +234,6 @@ def start(args):
     if writing or speaking:
         updated = list(map(lambda x: {
                        "topic": x.topic, "content": x.content, "previous_answer": x.previous_answer}, flashcards))
-        with open("./yaml/" + file_name, "w") as yf:
-            yaml.dump(updated, yf, default_flow_style=False)
+        with open("./yaml/" + file_name, "w", encoding="utf-8") as yf:
+            yaml.dump(updated, yf, default_flow_style=False,
+                      encoding='utf-8', allow_unicode=True)
