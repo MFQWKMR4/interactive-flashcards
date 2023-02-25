@@ -6,6 +6,7 @@ import random
 import textwrap
 
 import yaml
+from recognition import AudioInput
 from future.builtins.misc import input
 
 MAX_WIDTH = 120
@@ -173,7 +174,7 @@ class Flashcard:
         for line in lines:
             print(line)
 
-    def run(self, inverted=False, w=False, s=False):
+    def run(self, inverted=False, w=False, s=False, ai=None):
         """Execute the flashcard.
 
         It will transition between this states:
@@ -189,12 +190,14 @@ class Flashcard:
         else:
             if w:
                 self.draw(show_placeholder=True, inverted=inverted)
-                ans = input("( ´ゝ`) ... )")
+                ans = input("( ´ゝ`) Write ...)")
                 self.previous_answer = ans
                 self.draw()
                 input()
             else:
                 self.draw(show_placeholder=True, inverted=inverted)
+                ans = ai.run()
+                self.previous_answer = ans
                 input()
                 self.draw()
                 input()
@@ -203,8 +206,11 @@ class Flashcard:
 def run_flashcards(flashcards, ordered, inverted, w, s):
     if not ordered:
         random.shuffle(flashcards)
+    ai = None
+    if s:
+        ai = AudioInput()
     for fc in flashcards:
-        fc.run(inverted=inverted, w=w, s=s)
+        fc.run(inverted=inverted, w=w, s=s, ai=ai)
 
 
 def start(args):
