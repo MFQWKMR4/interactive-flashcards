@@ -47,12 +47,17 @@ def get_arguments():
                         help='Show cards keeping the file order')
     parser.add_argument('-I', '--inverted', action="store_true", default=False,
                         help='Hide the topic instead of the content')
+    parser.add_argument('-W', '--writing', action="store_true", default=False,
+                        help='answer by writing')
+    parser.add_argument('-S', '--speaking', action="store_true", default=False,
+                        help='answer by speaking')
     return parser.parse_args()
 
 
 def main():
     args = get_arguments()
     start(args)
+
 
 if __name__ == "__main__":
     main()

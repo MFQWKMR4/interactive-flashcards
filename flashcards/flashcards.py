@@ -8,7 +8,7 @@ import textwrap
 import yaml
 from future.builtins.misc import input
 
-MAX_WIDTH = 70
+MAX_WIDTH = 120
 MIN_CONTENT_HEIGHT = 6
 BORDER = '*'
 
@@ -23,13 +23,13 @@ class Flashcard:
     a key to shown next flashcard or to finish.
     """
 
-    def __init__(self, topic, content, keywords=None, max_card_width=MAX_WIDTH,
+    def __init__(self, topic, content, previous_answer=None, max_card_width=MAX_WIDTH,
                  min_content_height=MIN_CONTENT_HEIGHT):
         self.max_card_width = max_card_width
         self.min_content_height = min_content_height
         self.topic = topic
         self.content = content
-        self.keywords = keywords
+        self.previous_answer = previous_answer
 
     def format_raw(self, line, max_length):
         """Processes raw data.
@@ -114,15 +114,16 @@ class Flashcard:
         return [self.style_on_line(l, self.max_card_width)
                 for l in content_lines]
 
-    def get_keywords(self):
-        """Generate the keywords lines ready to be displayed.
+    def get_previous_answer(self):
+        """Generate the previous_answer lines ready to be displayed.
 
         :returns: lines ready to be shown.
         :rtype: list
         """
 
         topic_lines = ['']
-        topic_lines += self.format_raw(self.keywords, self.max_card_width)
+        topic_lines += self.format_raw(self.previous_answer,
+                                       self.max_card_width)
         topic_lines += ['']
         return [self.style_on_line(l, self.max_card_width) for l in topic_lines]
 
@@ -145,7 +146,7 @@ class Flashcard:
         content = self.get_content(self.content)
 
         if show_placeholder:
-            placeholder = 'Press [Enter] to show text'
+            placeholder = 'Answer and Press [Enter] to submit'
             if inverted:
                 topic = self.get_topic(placeholder)
             else:
@@ -156,10 +157,10 @@ class Flashcard:
         lines.append(horizontal_border)
         lines += content
 
-        if self.keywords:
+        if self.previous_answer:
             lines.append(horizontal_border)
             lines.append(horizontal_border)
-            lines += self.get_keywords()
+            lines += self.get_previous_answer()
 
         lines.append(horizontal_border)
         return lines
@@ -168,43 +169,64 @@ class Flashcard:
         """Draw the generated lines."""
         self.clean()
         lines = self.get_lines_to_draw(
-                inverted=inverted, show_placeholder=show_placeholder)
+            inverted=inverted, show_placeholder=show_placeholder)
         for line in lines:
             print(line)
 
-    def run(self, inverted=False):
+    def run(self, inverted=False, w=False, s=False):
         """Execute the flashcard.
 
         It will transition between this states:
         1) Content shows the placeholder and will wait for an input to continue.
         2) Content is shown and will wait for an input to continue.
         """
-        self.draw(show_placeholder=True, inverted=inverted)
-        input()
-        self.draw()
-        input()
+
+        if (not w) and (not s):
+            self.draw(show_placeholder=True, inverted=inverted)
+            input()
+            self.draw()
+            input()
+        else:
+            if w:
+                self.draw(show_placeholder=True, inverted=inverted)
+                ans = input("( ´ゝ`) ... )")
+                self.previous_answer = ans
+                self.draw()
+                input()
+            else:
+                self.draw(show_placeholder=True, inverted=inverted)
+                input()
+                self.draw()
+                input()
 
 
-def run_flashcards(flashcards, ordered, inverted):
+def run_flashcards(flashcards, ordered, inverted, w, s):
     if not ordered:
         random.shuffle(flashcards)
     for fc in flashcards:
-            fc.run(inverted=inverted)
+        fc.run(inverted=inverted, w=w, s=s)
 
 
 def start(args):
     file_names = args.file_names
     ordered = args.ordered
     inverted = args.inverted
+    writing = args.writing
+    speaking = args.speaking
 
     flashcards = []
 
     for file_name in file_names:
         with open("./yaml/" + file_name) as stream:
             # no exception handling here, let yaml exceptions do their job
-            parsed_file = yaml.load(stream,Loader=yaml.Loader)
+            parsed_file = yaml.load(stream, Loader=yaml.Loader)
             for data in parsed_file:
                 fc = Flashcard(**data)
                 flashcards.append(fc)
 
-    run_flashcards(flashcards, ordered, inverted)
+    run_flashcards(flashcards, ordered, inverted, writing, speaking)
+    if writing or speaking:
+        updated = list(map(lambda x: {
+                       "topic": x.topic, "content": x.content, "previous_answer": x.previous_answer}, flashcards))
+        with open("./yaml/" + file_name, "w") as yf:
+            yaml.dump(updated, yf, default_flow_style=False)
