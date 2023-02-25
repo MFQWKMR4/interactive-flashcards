@@ -16,7 +16,7 @@ Why does this file exist, and why not put this in __main__?
 """
 import argparse
 
-from .flashcards import start
+from flashcards import start
 
 parser = argparse.ArgumentParser(description='Command description.')
 parser.add_argument('names', metavar='NAME', nargs=argparse.ZERO_OR_MORE,
@@ -53,3 +53,6 @@ def get_arguments():
 def main():
     args = get_arguments()
     start(args)
+
+if __name__ == "__main__":
+    main()

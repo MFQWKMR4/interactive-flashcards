@@ -200,9 +200,9 @@ def start(args):
     flashcards = []
 
     for file_name in file_names:
-        with open(file_name) as stream:
+        with open("./yaml/" + file_name) as stream:
             # no exception handling here, let yaml exceptions do their job
-            parsed_file = yaml.load(stream)
+            parsed_file = yaml.load(stream,Loader=yaml.Loader)
             for data in parsed_file:
                 fc = Flashcard(**data)
                 flashcards.append(fc)

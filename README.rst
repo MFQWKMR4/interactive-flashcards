@@ -1,70 +1,17 @@
 ========
 Overview
 ========
-
-.. start-badges
-
-.. list-table::
-    :stub-columns: 1
-
-    * - docs
-      - |docs|
-    * - tests
-      - | |travis|
-        | |codecov|
-    * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations|
-
-.. |docs| image:: https://readthedocs.org/projects/python-flashcards/badge/?style=flat
-    :target: https://readthedocs.org/projects/python-flashcards
-    :alt: Documentation Status
-
-.. |travis| image:: https://travis-ci.org/Woile/flashcards.svg?branch=master
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.org/Woile/flashcards
-
-.. |codecov| image:: https://codecov.io/github/Woile/flashcards/coverage.svg?branch=master
-    :alt: Coverage Status
-    :target: https://codecov.io/github/Woile/flashcards
-
-.. |version| image:: https://img.shields.io/pypi/v/python-flashcards.svg
-    :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/python-flashcards
-
-.. |wheel| image:: https://img.shields.io/pypi/wheel/python-flashcards.svg
-    :alt: PyPI Wheel
-    :target: https://pypi.python.org/pypi/python-flashcards
-
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/python-flashcards.svg
-    :alt: Supported versions
-    :target: https://pypi.org/project/python-flashcards/
-
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/python-flashcards.svg
-    :alt: Supported implementations
-    :target: https://pypi.org/project/python-flashcards/
-
-
-.. end-badges
-
-small cli tool to study using fl
+[fork] small cli tool to study using fl
 
 * Free software: BSD license
-
-
-.. image:: docs/out.gif
-
 
 Installation
 ============
 
 ::
 
-    pip3 install python-flashcards
+    pip3 install -r requirements.txt
 
-What flashcards are
-===================
-
-  A flashcard or flash card is a set of cards bearing information, as words or numbers, on either or both sides, used in classroom drills or in private study. One writes a question on a card and an answer overleaf. `[Wikipedia] <https://en.wikipedia.org/wiki/Flashcard>`_
 
 How does this work
 ==================
@@ -86,8 +33,6 @@ How does this work
     keywords: programming, language
 
 
-Being ``keyword`` the only optional.
-
 Usage
 =====
 
@@ -95,53 +40,5 @@ Let's suppose ``anatomy.yaml`` is your file with information related to anatomy.
 
 ::
 
-    flashcards anatomy.yaml
+    python3 cli.py anatomy.yaml
 
-
-If you want the cards in order:
-
-::
-
-    flashcards --ordered meds.yaml
-
-If you want to show the hide the topic instead of the content:
-
-::
-
-    flashcards --inverted meds.yaml
-
-For more help:
-
-::
-
-    flashcards -h
-
-
-Documentation
-=============
-
-https://python-flashcards.readthedocs.io/
-
-Development
-===========
-
-To run the all tests run::
-
-    tox
-
-Note, to combine the coverage data from all the tox environments run:
-
-.. list-table::
-    :widths: 10 90
-    :stub-columns: 1
-
-    - - Windows
-      - ::
-
-            set PYTEST_ADDOPTS=--cov-append
-            tox
-
-    - - Other
-      - ::
-
-            PYTEST_ADDOPTS=--cov-append tox
