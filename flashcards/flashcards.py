@@ -196,6 +196,7 @@ class Flashcard:
                 input()
             else:
                 self.draw(show_placeholder=True, inverted=inverted)
+                input("Press [Enter] if you're ready")
                 ans = ai.run()
                 self.previous_answer = ans
                 input()
